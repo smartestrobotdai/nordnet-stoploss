@@ -4,14 +4,19 @@
   "description": "Build an Extension with Angular",
   "manifest_version": 2,
   "permissions": [
+      "webRequest",
+      "tabs",
       "activeTab",
+      "alarms",
       "webNavigation",
-      "storage"
+      "storage",
+      "https://www.nordnet.se/*"
   ],
   "background": {
       "scripts": [
           "background.js",
-          "runtime.js"
+          "runtime.js",
+          "inject.js"
       ]
   },
   "page_action": {

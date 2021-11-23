@@ -11,7 +11,13 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     chrome.storage.sync.get('color', ({ color }) => {
       this.color = color;
-    });
+    })
+    chrome.webRequest.onBeforeSendHeaders.addListener(
+      (requestDetails) => {
+        console.log(requestDetails)
+      }, {urls: ["<all_urls>"]}, ['requestHeaders']
+    )
+    console.log('onBeforeSendHeaders')
   }
 
   public updateColor(color: string) {
@@ -19,12 +25,18 @@ export class AppComponent implements OnInit {
   }
 
   public colorize() {
-      chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-        chrome.tabs.executeScript(
-          tabs[0].id!,
-          { code: `document.body.style.backgroundColor = '${ this.color }';` }
-        );
-      });
+    console.log('colorize')
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+      chrome.tabs.executeScript(
+        tabs[0].id!,
+        { code: `document.body.style.backgroundColor = '${ this.color }';` }
+      );
+      chrome.tabs.executeScript({
+        code: `console.log('location:', window.location.href);`
+      })
+
+
+    })
       // V3 API, uncomment once supported
       // chrome.scripting.executeScript({
       //   target: {
